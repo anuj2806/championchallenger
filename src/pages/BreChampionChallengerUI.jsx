@@ -79,7 +79,7 @@ export default function BreChampionChallengerUI() {
   const [selectedChallenger, setSelectedChallenger] =
     useState("CreditPolicy v1.1");
 
-  const [showResults, setShowResults] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
