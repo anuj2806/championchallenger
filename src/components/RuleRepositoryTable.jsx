@@ -1,0 +1,49 @@
+import { Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useTheme } from "@mui/material";
+import React from "react";
+
+function RuleRepositoryTable({filteredRows}) {
+  const theme = useTheme(); 
+  return (
+    <TableContainer component={Paper} sx={{ border: `1px solid ${theme.palette.divider}` }}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Rule ID</TableCell>
+            <TableCell>Version</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Owner</TableCell>
+            <TableCell>Updated</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filteredRows.map((row, idx) => (
+            <TableRow key={`${row.id}-${row.version}-${idx}`} hover>
+              <TableCell>
+                <Typography fontWeight={600}>{row.id}</Typography>
+              </TableCell>
+              <TableCell>{row.version}</TableCell>
+              <TableCell>
+                <Chip
+                  label={row.status}
+                  size="small"
+                  color={
+                    row.status === "Champion"
+                      ? "success"
+                      : row.status === "Challenger"
+                      ? "warning"
+                      : "default"
+                  }
+                  variant="filled"
+                />
+              </TableCell>
+              <TableCell>{row.owner}</TableCell>
+              <TableCell>{row.updated}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+export default RuleRepositoryTable;
