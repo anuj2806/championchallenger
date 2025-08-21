@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/championchallenger/static/css/main.e6c13ad2.css",
+    "main.js": "/championchallenger/static/js/main.9d491a01.js",
+    "static/js/453.1fe6b897.chunk.js": "/championchallenger/static/js/453.1fe6b897.chunk.js",
+    "index.html": "/championchallenger/index.html",
+    "main.e6c13ad2.css.map": "/championchallenger/static/css/main.e6c13ad2.css.map",
+    "main.9d491a01.js.map": "/championchallenger/static/js/main.9d491a01.js.map",
+    "453.1fe6b897.chunk.js.map": "/championchallenger/static/js/453.1fe6b897.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.9d491a01.js"
+  ]
+}
