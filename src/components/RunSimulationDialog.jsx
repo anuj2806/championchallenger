@@ -1,12 +1,20 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
   Slider,
   Step,
   StepLabel,
@@ -15,22 +23,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ExcelUploader from "./ExcelUploader";
 const RunSimulationDialog = ({
+  file,
+  setFile,
+  ruleData,
   dialogOpen,
   setDialogOpen,
   selectedChampion,
   selectedChallenger,
   setSelectedChampion,
   setSelectedChallenger,
-  handleRunSimulation
+  handleRunSimulation,
 }) => {
-    const [activeStep, setActiveStep] = useState(0);
-    const [dataset, setDataset] = useState("Historical – Jan–Jun 2025");
-    const [sample, setSample] = useState(25000);
-    const [fullPortfolio, setFullPortfolio] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const challengerOptions = useMemo(() => {
+    console.log(selectedChampion);
+  return ruleData.filter(
+    (r) => r.championName === selectedChampion && r.ruleTag === "Challenger"
+  );
+}, [selectedChampion, ruleData]);
   return (
     <Dialog
       open={dialogOpen}
@@ -50,62 +65,58 @@ const RunSimulationDialog = ({
 
         {activeStep === 0 && (
           <StepContentWrapper>
-            <TextField
-              fullWidth
-              label="Champion Rule"
-              value={selectedChampion}
-              onChange={(e) => setSelectedChampion(e.target.value)}
-              helperText="Pick current production version"
-            />
+            <FormControl fullWidth>
+              <InputLabel>Champion Rule</InputLabel>
+              <Select
+                input={<OutlinedInput label="Champion Rule" />}
+                value={selectedChampion}
+                onChange={(e) => setSelectedChampion(e.target.value)}
+              >
+                {ruleData
+                  .filter((r) => r.ruleTag === "Champion")
+                  .map((rule) => (
+                    <MenuItem key={rule.ruleName} value={rule.ruleName}>
+                      {rule.ruleName} ({rule.ruleVersion})
+                    </MenuItem>
+                  ))}
+              </Select>
+              <FormHelperText>Pick current production version</FormHelperText>
+            </FormControl>
           </StepContentWrapper>
         )}
 
         {activeStep === 1 && (
           <StepContentWrapper>
-            <TextField
-              fullWidth
-              label="Challenger Rule"
-              value={selectedChallenger}
-              onChange={(e) => setSelectedChallenger(e.target.value)}
-              helperText="Select new rule version to test"
-            />
+            <FormControl fullWidth>
+              <InputLabel>Challenger Rule</InputLabel>
+              <Select
+                input={<OutlinedInput label="Challenger Rule" />}
+                multiple
+                value={selectedChallenger} // should be an array
+                onChange={(e) => setSelectedChallenger(e.target.value)}
+                renderValue={(selected) => selected.join(", ")} // display selected names
+              >
+                {challengerOptions.map((rule) => (
+                  <MenuItem key={rule.ruleName} value={rule.ruleName}>
+                    <Checkbox
+                      checked={selectedChallenger.indexOf(rule.ruleName) > -1}
+                    />
+                    <ListItemText
+                      primary={`${rule.ruleName} (${rule.ruleVersion})`}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                Select new rule version(s) to test
+              </FormHelperText>
+            </FormControl>
           </StepContentWrapper>
         )}
 
         {activeStep === 2 && (
           <StepContentWrapper>
-            <Grid container spacing={2}>
-              <Grid size={{xs:4}}>
-                <TextField
-                  fullWidth
-                  label="Dataset"
-                  value={dataset}
-                  onChange={(e) => setDataset(e.target.value)}
-                />
-              </Grid>
-              <Grid size={{xs:4}}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={fullPortfolio}
-                      onChange={(e) => setFullPortfolio(e.target.checked)}
-                    />
-                  }
-                  label="Full Portfolio"
-                />
-              </Grid>
-              <Grid size={{xs:4}}>
-                <Typography gutterBottom>Sample Size</Typography>
-                <Slider
-                  value={sample}
-                  onChange={(_, v) => setSample(v)}
-                  min={1000}
-                  max={100000}
-                  step={1000}
-                  valueLabelDisplay="auto"
-                />
-              </Grid>
-            </Grid>
+              <ExcelUploader file={file} setFile={setFile}/> 
           </StepContentWrapper>
         )}
 
@@ -113,15 +124,7 @@ const RunSimulationDialog = ({
           <StepContentWrapper>
             <SummaryRow label="Champion" value={selectedChampion} />
             <SummaryRow label="Challenger" value={selectedChallenger} />
-            <SummaryRow label="Dataset" value={dataset} />
-            <SummaryRow
-              label="Run Mode"
-              value={
-                fullPortfolio
-                  ? "Full Portfolio"
-                  : `Random Sample (${sample.toLocaleString()} apps)`
-              }
-            />
+            <SummaryRow label="Dataset" value={file.name} />
           </StepContentWrapper>
         )}
       </DialogContent>

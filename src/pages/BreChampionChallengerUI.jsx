@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,82 +24,82 @@ import {
   Alert,
   IconButton,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import SectionCard from "../components/SectionCard";
 import RuleRepositoryTable from "../components/RuleRepositoryTable";
 import { useThemeContext } from "../Theme/ThemeContext";
 import ResultDashboard from "./ResultDashboard";
 import RunSimulationDialog from "../components/RunSimulationDialog";
-
-const RULE_ROWS = [
-  {
-    id: "CreditPolicy",
-    version: "v1.0",
-    status: "Champion",
-    owner: "Raj",
-    updated: "10 Aug 2025",
-  },
-  {
-    id: "CreditPolicy",
-    version: "v1.1",
-    status: "Challenger",
-    owner: "Meena",
-    updated: "15 Aug 2025",
-  },
-  {
-    id: "IncomeCheck",
-    version: "v2.0",
-    status: "Champion",
-    owner: "Amit",
-    updated: "05 Aug 2025",
-  },
-  {
-    id: "IncomeCheck",
-    version: "v2.1",
-    status: "Challenger",
-    owner: "Amit",
-    updated: "18 Aug 2025",
-  },
-  {
-    id: "FraudRules",
-    version: "v3.3",
-    status: "Archived",
-    owner: "Neeraj",
-    updated: "22 Jul 2025",
-  },
-];
+import getAllRules from "../apis/allrulesData";
+import executeRuleData from "../apis/executerRuleData";
+import Loader from "../components/Loader";
 
 export default function BreChampionChallengerUI() {
   const [query, setQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState("All");
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const [selectedChampion, setSelectedChampion] = useState("CreditPolicy v1.0");
-  const [selectedChallenger, setSelectedChallenger] =
-    useState("CreditPolicy v1.1");
-
+  const [RULE_ROWS, setRULE_ROWS] = useState([]);
+  const [ruleOutput, setRuleOutput] = useState([]);
+  const [file, setFile] = useState(null);
+  const [selectedChampion, setSelectedChampion] = useState();
+  const [selectedChallenger, setSelectedChallenger] = useState([]);
+  const [loading, setLoading] = React.useState(false);
   const [showResults, setShowResults] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
-  const { darkMode, toggleDarkMode } = useThemeContext();
-  const theme = useTheme();
-  const filteredRows = useMemo(() => {
-    return RULE_ROWS.filter(
-      (r) =>
-        (filter === "All" || r.status === filter) &&
-        `${r.id} ${r.version} ${r.status} ${r.owner}`
-          .toLowerCase()
-          .includes(query.toLowerCase())
-    );
-  }, [query, filter]);
+  
+  const rulesArray = useMemo(() => {
+    const result = [];
 
-  const handleRunSimulation = () => {
-    setShowResults(true);
+    // 1. Add Champion rule
+    const championRule = RULE_ROWS.find(
+      (r) => r.ruleName === selectedChampion && r.ruleTag === "Champion"
+    );
+    if (championRule) {
+      result.push({
+        ruleName: championRule.ruleName,
+        ruleVersion: championRule.ruleVersion,
+      });
+    }
+
+    // 2. Add all selected challengers
+    selectedChallenger.forEach((challengerName) => {
+      const challengerRule = RULE_ROWS.find(
+        (r) => r.ruleName === challengerName && r.ruleTag === "Challenger"
+      );
+      if (challengerRule) {
+        result.push({
+          ruleName: challengerRule.ruleName,
+          ruleVersion: challengerRule.ruleVersion,
+        });
+      }
+    });
+
+    return result;
+  }, [selectedChampion, selectedChallenger, RULE_ROWS]);
+
+  const handleRunSimulation = async () => {
+    if (!file) {
+      setSnackbar({
+        open: true,
+        message: "Please select a file before uploading!",
+        severity: "error",
+      });
+      return;
+    }
+
     setDialogOpen(false);
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file); // File object from input
+    formData.append("rules", JSON.stringify(rulesArray));
+    var ruleoutput = await executeRuleData(formData);
+    setRuleOutput(ruleoutput);
+    setShowResults(true);
+    setLoading(false);
     setSnackbar({
       open: true,
       message: "Simulation completed on sample set.",
@@ -122,66 +122,40 @@ export default function BreChampionChallengerUI() {
       severity: "info",
     });
   };
+  const filteredRows = useMemo(() => {
+    return RULE_ROWS.filter(
+      (r) =>
+        (filter === "All" || r.ruleTag === filter) &&
+        `${r.ruleName} ${r.ruleVersion} ${r.ruleTag} ${r.ownerName}`
+          .toLowerCase()
+          .includes(query.toLowerCase())
+    );
+  }, [RULE_ROWS, query, filter]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allRules = await getAllRules();
+        if (allRules && Array.isArray(allRules)) {
+          setRULE_ROWS(allRules);
+        }
+        console.log("All Rules:", allRules);
+      } catch (error) {
+        console.error("Error fetching all rules:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        bgcolor: "background.default",
-      }}
-    >
-      <AppBar position="sticky" color="primary" elevation={1}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
-            BRE Rule Versions
-          </Typography>
-          <TextField
-            size="small"
-            placeholder="Search rules, owners…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            sx={{ mr: 2, width: 320, display: { xs: "none", sm: "block" } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <FormControlLabel
-            control={<Switch checked={darkMode} onChange={toggleDarkMode} />}
-            label={darkMode ? "Dark" : "Light"}
-          />
-          <IconButton
-            color="inherit"
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-          >
-            <MenuItem onClick={() => setFilter("All")}>All</MenuItem>
-            <MenuItem onClick={() => setFilter("Champion")}>Champion</MenuItem>
-            <MenuItem onClick={() => setFilter("Challenger")}>
-              Challenger
-            </MenuItem>
-            <MenuItem onClick={() => setFilter("Archived")}>Archived</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
+    <>
       <Container sx={{ py: 3, width: "100%", flexGrow: 1 }}>
         <Box display="flex" alignItems="center" gap={1} mb={2}>
           {[
             { label: "All", color: "default" },
             { label: "Champion", color: "success" },
             { label: "Challenger", color: "warning" },
-            { label: "Archived", color: "default" },
           ].map((c) => (
             <Chip
               key={c.label}
@@ -212,9 +186,10 @@ export default function BreChampionChallengerUI() {
               <RuleRepositoryTable filteredRows={filteredRows} />
             </SectionCard>
           </Grid>
-
+          {loading && <Loader text="Loading Champion & Challenger rule insights..." />}
           {showResults && (
             <ResultDashboard
+              ruleOutput={ruleOutput}
               selectedChampion={selectedChampion}
               selectedChallenger={selectedChallenger}
               handlePromote={handlePromote}
@@ -224,6 +199,9 @@ export default function BreChampionChallengerUI() {
         </Grid>
       </Container>
       <RunSimulationDialog
+        file={file}
+        setFile={setFile}
+        ruleData={RULE_ROWS}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
         selectedChampion={selectedChampion}
@@ -252,6 +230,6 @@ export default function BreChampionChallengerUI() {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+    </>
   );
 }

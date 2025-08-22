@@ -17,27 +17,27 @@ function RuleRepositoryTable({filteredRows}) {
         </TableHead>
         <TableBody>
           {filteredRows.map((row, idx) => (
-            <TableRow key={`${row.id}-${row.version}-${idx}`} hover>
+            <TableRow key={`${row.ruleName}-${row.ruleVersion}-${idx}`} hover>
               <TableCell>
-                <Typography fontWeight={600}>{row.id}</Typography>
+                <Typography fontWeight={600}>{row.ruleName}</Typography>
               </TableCell>
-              <TableCell>{row.version}</TableCell>
+              <TableCell>{row.ruleVersion}</TableCell>
               <TableCell>
                 <Chip
-                  label={row.status}
+                  label={row.ruleTag}
                   size="small"
                   color={
-                    row.status === "Champion"
+                    row.ruleTag === "Champion"
                       ? "success"
-                      : row.status === "Challenger"
+                      : row.ruleTag === "Challenger"
                       ? "warning"
                       : "default"
                   }
                   variant="filled"
                 />
               </TableCell>
-              <TableCell>{row.owner}</TableCell>
-              <TableCell>{row.updated}</TableCell>
+              <TableCell>{row.ownerName}</TableCell>
+              <TableCell>{row.updatedDate}</TableCell>
             </TableRow>
           ))}
         </TableBody>

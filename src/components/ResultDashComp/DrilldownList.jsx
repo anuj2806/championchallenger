@@ -1,40 +1,85 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useTheme } from "@mui/material";
-import DecisionPill from "../DecisionPill";
 
-const DrilldownList=()=> {
-   const theme = useTheme();
-  const rows = [
-    { id: "100234", champ: { decision: "Declined", reason: "Low Score (640)" }, chall: { decision: "Approved", reason: "Score 660, DTI OK" } },
-    { id: "100235", champ: { decision: "Approved", reason: "Score 720" }, chall: { decision: "Approved", reason: "Score 710" } },
-    { id: "100236", champ: { decision: "Declined", reason: "High DTI 48%" }, chall: { decision: "Declined", reason: "High DTI 46%" } },
-  ];
+
+import React, { useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Tooltip,
+  useTheme,
+} from "@mui/material";
+import DecisionPill from "../DecisionPill"; // Custom component for decision styling
+
+const DrilldownList = ({ ruleOutput }) => {
+  const theme = useTheme();
+
+  const decisions = ruleOutput?.decisions || [];
+ 
+  const ruleNames = useMemo(() => {
+    const set = new Set();
+    decisions.forEach((d) => {
+      d.ruleDecisions.forEach((rd) => set.add(rd.ruleName));
+    });
+    return Array.from(set);
+  }, [decisions]);
+
   return (
-    <TableContainer component={Paper} sx={{ border: `1px solid ${theme.palette.divider}` }}>
-      <Table size="small">
+    <TableContainer
+      component={Paper}
+      sx={{
+        border: `1px solid ${theme.palette.divider}`,
+        maxHeight: "500px",
+        overflowX: "auto",
+      }}
+    >
+      <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>Application ID</TableCell>
-            <TableCell>Champion Decision</TableCell>
-            <TableCell>Challenger Decision</TableCell>
+            {ruleNames.map((rule) => (
+              <TableCell key={rule}>{rule}</TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((r) => (
-            <TableRow key={r.id} hover>
+          {decisions.map((row) => (
+            <TableRow key={row.applicationId} hover sx={{ alignItems: "center" }}>
+              {/* Fixed Columns */}
               <TableCell>
-                <Typography fontWeight={600}>{r.id}</Typography>
+                <Typography fontWeight={600}>{row.applicationId}</Typography>
               </TableCell>
-              <TableCell>
-                <DecisionPill decision={r.champ.decision} details={r.champ.reason} />
-              </TableCell>
-              <TableCell>
-                <DecisionPill decision={r.chall.decision} details={r.chall.reason} />
-              </TableCell>
+
+              {/* Dynamic Rule Columns */}
+              {ruleNames.map((rule) => {
+                const rd = row.ruleDecisions.find((r) => r.ruleName === rule);
+                return (
+                  <TableCell key={rule}>
+                    {rd ? (
+                      <Tooltip
+                        title={`Score: ${rd.score}, Time: ${rd.timeTakenMs}ms`}
+                        arrow
+                      >
+                        <span>
+                          <DecisionPill decision={rd.decision} />
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      "-"
+                    )}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-}
+};
+
 export default DrilldownList;
