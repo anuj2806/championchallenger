@@ -21,18 +21,18 @@ import SectionCard from "../components/SectionCard";
 
 // 1. Approval Rate Trend Data
 const approvalRateData = [
-  { month: "Sep-24", "Approval Rate": 55 },
-  { month: "Oct-24", "Approval Rate": 56 },
-  { month: "Nov-24", "Approval Rate": 56 },
-  { month: "Dec-24", "Approval Rate": 57 },
-  { month: "Jan-25", "Approval Rate": 57 },
-  { month: "Feb-25", "Approval Rate": 58 },
-  { month: "Mar-25", "Approval Rate": 59 },
-  { month: "Apr-25", "Approval Rate": 60 },
-  { month: "May-25", "Approval Rate": 61 },
-  { month: "Jun-25", "Approval Rate": 61 },
-  { month: "Jul-25", "Approval Rate": 61 },
-  { month: "Aug-25", "Approval Rate": 62 },
+  { month: "Sep-24", "Approval Rate": 62 },
+  { month: "Oct-24", "Approval Rate": 61 },
+  { month: "Nov-24", "Approval Rate": 61 },
+  { month: "Dec-24", "Approval Rate": 61 },
+  { month: "Jan-25", "Approval Rate": 60 },
+  { month: "Feb-25", "Approval Rate": 59 },
+  { month: "Mar-25", "Approval Rate": 58 },
+  { month: "Apr-25", "Approval Rate": 57 },
+  { month: "May-25", "Approval Rate": 57 },
+  { month: "Jun-25", "Approval Rate": 56 },
+  { month: "Jul-25", "Approval Rate": 56 },
+  { month: "Aug-25", "Approval Rate": 55 },
 ];
 
 // 2. Delinquency Rate Trend Data
@@ -53,18 +53,18 @@ const delinquencyRateData = [
 
 // 3. Average Loan Balance Trend
 const avgLoanBalanceData = [
-  { month: "Sep-24", "Avg Loan Balance": 15000 },
-  { month: "Oct-24", "Avg Loan Balance": 15050 },
-  { month: "Nov-24", "Avg Loan Balance": 15090 },
-  { month: "Dec-24", "Avg Loan Balance": 15120 },
-  { month: "Jan-25", "Avg Loan Balance": 15180 },
-  { month: "Feb-25", "Avg Loan Balance": 15210 },
-  { month: "Mar-25", "Avg Loan Balance": 15240 },
-  { month: "Apr-25", "Avg Loan Balance": 15280 },
-  { month: "May-25", "Avg Loan Balance": 15300 },
-  { month: "Jun-25", "Avg Loan Balance": 15320 },
-  { month: "Jul-25", "Avg Loan Balance": 15340 },
-  { month: "Aug-25", "Avg Loan Balance": 15380 },
+  { month: "Sep-24", "Avg Loan Balance": 15380 },
+  { month: "Oct-24", "Avg Loan Balance": 15340 },
+  { month: "Nov-24", "Avg Loan Balance": 15320 },
+  { month: "Dec-24", "Avg Loan Balance": 15300 },
+  { month: "Jan-25", "Avg Loan Balance": 15280 },
+  { month: "Feb-25", "Avg Loan Balance": 15240 },
+  { month: "Mar-25", "Avg Loan Balance": 15210 },
+  { month: "Apr-25", "Avg Loan Balance": 15180 },
+  { month: "May-25", "Avg Loan Balance": 15120 },
+  { month: "Jun-25", "Avg Loan Balance": 15090 },
+  { month: "Jul-25", "Avg Loan Balance": 15050 },
+  { month: "Aug-25", "Avg Loan Balance": 15000 },
 ];
 
 // 4. Portfolio Profitability Trend

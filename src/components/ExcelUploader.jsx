@@ -63,7 +63,7 @@ const ExcelUploader = ({file,setFile}) => {
   };
 
   return (
-    <Grid container sx={{padding:"0px 20px"}}>
+    <Grid container sx={{padding:"0px 10px"}}>
       <Grid size={{xs:12}}>   
         <Box
           onClick={() => {
@@ -75,7 +75,7 @@ const ExcelUploader = ({file,setFile}) => {
             border: `1px dashed ${theme.palette.primary.main}`,
             borderRadius: 2,
             textAlign: "center",
-            p: 4,
+            p: 2, 
             cursor: "pointer",
             "&:hover": { bgcolor: theme.palette.background.paper}, 
           }}

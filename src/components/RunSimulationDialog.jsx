@@ -27,6 +27,7 @@ import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ExcelUploader from "./ExcelUploader";
+import DataSourceComponent from "./DataSourceComponent";
 const RunSimulationDialog = ({
   file,
   setFile,
@@ -42,10 +43,10 @@ const RunSimulationDialog = ({
   const [activeStep, setActiveStep] = useState(0);
   const challengerOptions = useMemo(() => {
     console.log(selectedChampion);
-  return ruleData.filter(
-    (r) => r.championName === selectedChampion && r.ruleTag === "Challenger"
-  );
-}, [selectedChampion, ruleData]);
+    return ruleData.filter(
+      (r) => r.championName === selectedChampion && r.ruleTag === "Challenger"
+    );
+  }, [selectedChampion, ruleData]);
   return (
     <Dialog
       open={dialogOpen}
@@ -116,7 +117,7 @@ const RunSimulationDialog = ({
 
         {activeStep === 2 && (
           <StepContentWrapper>
-              <ExcelUploader file={file} setFile={setFile}/> 
+            <DataSourceComponent file={file} setFile={setFile} />
           </StepContentWrapper>
         )}
 
@@ -124,7 +125,7 @@ const RunSimulationDialog = ({
           <StepContentWrapper>
             <SummaryRow label="Champion" value={selectedChampion} />
             <SummaryRow label="Challenger" value={selectedChallenger} />
-            <SummaryRow label="Dataset" value={file.name} />
+            <SummaryRow label="Dataset" value={file?.name} />
           </StepContentWrapper>
         )}
       </DialogContent>
