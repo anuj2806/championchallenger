@@ -1,8 +1,9 @@
 
-import { Box, Chip } from "@mui/material";
+import { Box, Chip, useTheme } from "@mui/material";
 
 const DecisionPill = ({ decision }) => {
   const decisionLower = decision.toLowerCase();
+  const theme = useTheme();
 
   // Map decisions to colors
   let color = "default";
@@ -16,7 +17,8 @@ const DecisionPill = ({ decision }) => {
 
   return (
     <Box display="inline-flex" alignItems="center" gap={1}>
-      <Chip size="small" label={decision} color={color} />
+      <Chip size="small" label={decision} color={color} sx={{backgroundColor:decisionLower.includes("approve") ?  theme.palette.positive : decisionLower.includes("decline")? theme.palette.negative:theme.palette.highlight}}
+/>
     </Box>
   );
 };

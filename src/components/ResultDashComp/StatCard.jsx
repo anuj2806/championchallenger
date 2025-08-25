@@ -1,8 +1,9 @@
-import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
+import { Box, Card, CardContent, Chip, Typography, useTheme } from "@mui/material";
 
 
 const StatCard = ({ title, left, right, delta, goodIsUp = true }) => {
   const improved = (right - left) * (goodIsUp ? 1 : -1) >= 0;
+  const theme = useTheme();
   return (
     <Card elevation={4}>
       <CardContent>
@@ -11,19 +12,18 @@ const StatCard = ({ title, left, right, delta, goodIsUp = true }) => {
         </Typography>
         <Box display="flex" alignItems="baseline" gap={2} mt={1} justifyContent={'space-between'}>
           <Box display="flex" justifyContent={'space-between'}>
-            <Typography variant="h5">{left}{typeof left === "number" && title.toLowerCase().includes("rate") ? "%" : ""}</Typography>
+            <Typography variant="h5">{title.toLowerCase().includes("loan") ? Number(left).toLocaleString("en-US") : left}</Typography>
             <Typography variant="h5">&nbsp; → &nbsp; </Typography>
-            <Typography variant="h5" color={improved ? "success.main" : "error.main"}>
-              {right}
-              {typeof right === "number" && title.toLowerCase().includes("rate") ? "%" : title.toLowerCase().includes("tat") ? "ms" : title.toLowerCase().includes("revenue") ? "" : ""}
+            <Typography variant="h5" color={improved ?  theme.palette.positive :  theme.palette.negative}>
+              {title.toLowerCase().includes("loan") ? Number(right).toLocaleString("en-US") : right}
             </Typography>
           </Box>
           <Chip
             size="small"
-            label={`${delta > 0 ? "+" : ""}${delta}${title.toLowerCase().includes("rate") ? "%" : title.toLowerCase().includes("tat") ? "ms" : title.toLowerCase().includes("revenue") ? "" : ""}`}
+            label={`${delta > 0 ? "+" : ""}${title.toLowerCase().includes("loan") ? Number(delta).toLocaleString("en-US") : delta}`}
             color={improved ? "success" : "error"}
             variant="filled"
-            sx={{marginTop:'-2px'}}
+            sx={{marginTop:'-2px',backgroundColor:improved ?  theme.palette.positive :  theme.palette.negative}}
           />
         </Box>
       </CardContent>

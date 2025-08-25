@@ -45,15 +45,15 @@ const MetricsTable = ({ruleOutput}) => {
                 <Typography fontWeight={600}>{r.ruleName}</Typography>
               </TableCell>
               <TableCell>{r.approvePercent.toFixed(2)}</TableCell>
-              <TableCell>{r.approvedLoanAmount.toFixed(2)}</TableCell>
+              <TableCell>{Number(r.approvedLoanAmount.toFixed(2)).toLocaleString("en-US")}</TableCell>
               <TableCell>{((r.avgTime)/1000).toFixed(2)}</TableCell>
-              <TableCell sx={{ color:r.approveDifference>=0?theme.palette.success.main:theme.palette.error.main}}>
+              <TableCell sx={{ color:r.approveDifference>=0?theme.palette.positive:theme.palette.negative}}>
                 {index==0?"":`${r.approveDifference>=0?"+":""}${r.approveDifference.toFixed(2)}`}
               </TableCell>
-              <TableCell sx={{ color:r.loanAmountDifference>=0?theme.palette.success.main:theme.palette.error.main}}>
-                {index==0?"":`${r.loanAmountDifference>=0?"+":""}${r.loanAmountDifference.toFixed(2)}`}
+              <TableCell sx={{ color:r.loanAmountDifference>=0?theme.palette.positive:theme.palette.negative}}>
+                {index==0?"":`${r.loanAmountDifference>=0?"+":""}${Number(r.loanAmountDifference.toFixed(2)).toLocaleString("en-US")}`}
               </TableCell>
-              <TableCell sx={{ color:r.avgTimeDifference<0?theme.palette.success.main:theme.palette.error.main}}>
+              <TableCell sx={{ color:r.avgTimeDifference<0?theme.palette.positive:theme.palette.negative}}>
                 {index==0?"":`${r.avgTimeDifference>=0?"+":""}${((r.avgTimeDifference)/1000).toFixed(2)}`}
               </TableCell>
             </TableRow>

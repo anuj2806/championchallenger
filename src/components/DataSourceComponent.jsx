@@ -10,6 +10,7 @@ import {
   Paper,
   useTheme,
   Dialog,
+  IconButton,
 } from "@mui/material";
 import { SvgIcon } from "@mui/material";
 import ExcelUploader from "./ExcelUploader";
@@ -67,6 +68,15 @@ const DataSourceComponent = ({ file, setFile }) => {
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: "8px",
   };
+  const onclickS3 =()=>{
+    window.open("https://s3.console.aws.amazon.com/s3/buckets/newgen","_blank")
+  }
+  const onclickAzure =()=>{
+    window.open("https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroupBlade/resourceType/Microsoft.Storage/storageAccounts","_blank")
+  }
+  const onclickJdbc =()=>{
+    window.open("https://www.example.com/jdbc-connection","_blank")
+  }
 
   return (
     <Box>
@@ -116,13 +126,17 @@ const DataSourceComponent = ({ file, setFile }) => {
                 justifyContent="center"
               >
                 <Stack alignItems="center" spacing={1}>
-                  <S3Icon sx={{ fontSize: 60 }} />
+                  <IconButton onClick={onclickS3}>
+                    <S3Icon sx={{ fontSize: 60 }} />
+                  </IconButton>
                   <Typography variant="body1" fontWeight="bold">
                     S3
                   </Typography>
                 </Stack>
                 <Stack alignItems="center" spacing={1}>
-                  <AzureBlobIcon sx={{ fontSize: 60 }} />
+                  <IconButton onClick={onclickAzure}>
+                    <AzureBlobIcon sx={{ fontSize: 60 }} />
+                  </IconButton>
                   <Typography
                     variant="body1"
                     fontWeight="bold"
@@ -133,7 +147,9 @@ const DataSourceComponent = ({ file, setFile }) => {
                   </Typography>
                 </Stack>
                 <Stack alignItems="center" spacing={1}>
-                  <JdbcIcon sx={{ fontSize: 60 }} />
+                  <IconButton onClick={onclickJdbc}>
+                    <JdbcIcon sx={{ fontSize: 60 }} />
+                  </IconButton>
                   <Typography variant="body1" fontWeight="bold">
                     JDBC
                   </Typography>

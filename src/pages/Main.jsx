@@ -40,7 +40,7 @@ const Main = () => {
               variant="h6"
               sx={{ flexGrow: 1, fontWeight: 700, color: "white" }}
             >
-              Newgen's Credit Decisioning Engine
+              Strategy Manager 
             </Typography>
             {/* <TextField
             size="small"

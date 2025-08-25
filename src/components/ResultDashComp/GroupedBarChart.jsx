@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import React from "react";
 import {
   ResponsiveContainer,
@@ -11,6 +12,7 @@ import {
 } from "recharts";
 
 const GroupedBarChart = ({ ruleOutput }) => {
+  const theme = useTheme(); 
   if (!ruleOutput || !ruleOutput.summary) return <p>No data available</p>;
 
   // Extract rule names dynamically
@@ -42,7 +44,7 @@ const GroupedBarChart = ({ ruleOutput }) => {
   ];
 
   // Colors for each rule (generate or set fixed palette)
-  const colors = ["#1E88E5", "#43A047", "#F4511E", "#8E24AA", "#FDD835"];
+  const colors = [ "#e7a8f8ff", theme.palette.alternative, theme.palette.secondary.main, "#8E24AA", "#FDD835"];
 
   return (
     <ResponsiveContainer width="100%" >
@@ -53,7 +55,7 @@ const GroupedBarChart = ({ ruleOutput }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="category" />
         <YAxis />
-        <Tooltip />
+        <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
         <Legend />
         {ruleNames.map((rule, index) => (
           <Bar

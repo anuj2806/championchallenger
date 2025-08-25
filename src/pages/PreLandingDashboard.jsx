@@ -14,7 +14,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Grid, Paper, Typography, Box, Container } from "@mui/material";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider, styled, useTheme } from "@mui/material/styles";
 import SectionCard from "../components/SectionCard";
 
 // Hardcoded data from the user's Excel file
@@ -172,6 +172,7 @@ const cacData = [
 ];
 
 export default function PreLandingDashboard() {
+    const theme = useTheme();
   return (
     <Container sx={{ py: 1, width: "100%", flexGrow: 1 }}>
       <Typography variant="h5" gutterBottom sx={{ mb: 4, textAlign: "center" }}>
@@ -191,7 +192,7 @@ export default function PreLandingDashboard() {
                 <Legend />
                 <Bar
                   dataKey="Approval Rate"
-                  fill="#8884d8"
+                  fill={"#8099faff"}
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -285,10 +286,10 @@ export default function PreLandingDashboard() {
                 <YAxis />
                 <Tooltip formatter={(value) => `$${value}M`} />
                 <Legend />
-                <Bar dataKey="Interest Income" stackId="a" fill="#8884d8" />
-                <Bar dataKey="Expected Loss" stackId="a" fill="#82ca9d" />
+                <Bar dataKey="Interest Income" stackId="a" fill="#82ca9d" />
+                <Bar dataKey="Expected Loss" stackId="a" fill={theme.palette.negative} />
                 <Bar dataKey="Acquisition Cost" stackId="a" fill="#ffc658" />
-                <Bar dataKey="Net Profit" fill="#FF8042" />
+                <Bar dataKey="Net Profit" fill={"#8099faff"} /> 
               </BarChart>
             </ResponsiveContainer>
             </Box>

@@ -26,13 +26,11 @@ function RuleRepositoryTable({filteredRows}) {
                 <Chip
                   label={row.ruleTag}
                   size="small"
-                  color={
-                    row.ruleTag === "Champion"
-                      ? "success"
+                  style={{backgroundColor:row.ruleTag === "Champion"
+                      ? theme.palette.positive 
                       : row.ruleTag === "Challenger"
-                      ? "warning"
-                      : "default"
-                  }
+                      ? theme.palette.negative
+                      : "default"}}
                   variant="filled"
                 />
               </TableCell>

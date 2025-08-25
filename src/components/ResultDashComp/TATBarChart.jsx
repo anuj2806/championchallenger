@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import React from "react";
 import {
   ResponsiveContainer,
@@ -11,6 +12,8 @@ import {
 } from "recharts";
 
 const TATBarChart = ({ apiOutput }) => {
+        const theme = useTheme(); 
+
   if (!apiOutput || !apiOutput.summary) return <p>No data available</p>;
 
   // Transform API data for Recharts
@@ -25,11 +28,11 @@ const TATBarChart = ({ apiOutput }) => {
         data={chartData}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="rule" />
+        <XAxis dataKey="rule" fontSize={12} />
         <YAxis />
-        <Tooltip formatter={(value) => `${value.toFixed(2)} s`} />
+        <Tooltip formatter={(value) => `${value.toFixed(2)} s`} /> 
         <Legend />
-        <Bar dataKey="latency" fill="#e67496ff" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="latency" fill={theme.palette.negative} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

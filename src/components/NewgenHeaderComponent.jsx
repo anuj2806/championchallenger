@@ -8,11 +8,13 @@ import {
   Link,
   Divider,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { HelpOutline, Launch } from "@mui/icons-material";
 import logo from "../assets/logo.svg";
 
 function NewgenHeaderComponent({ openChallengerModel }) {
+    const theme = useTheme();
   return (
     <Box
       display="flex"
@@ -32,7 +34,7 @@ function NewgenHeaderComponent({ openChallengerModel }) {
           sx={{ mx: 2, my: 1, bgcolor: "#cfcfcfff" }}
         />
         <Typography variant="h6" color="black" component="div">
-          Rule Builder
+          Newgen CDE
         </Typography>
       </Box>
 
@@ -44,7 +46,7 @@ function NewgenHeaderComponent({ openChallengerModel }) {
         <Link
           href="#"
           underline="none"
-          sx={{ display: "flex", alignItems: "center", color: "blue" }}
+          sx={{ display: "flex", alignItems: "center", color: theme.palette.primary.main }}
         >
           <Typography variant="body2" sx={{ fontWeight: "bold" }}>
             Automation Studio
@@ -53,7 +55,7 @@ function NewgenHeaderComponent({ openChallengerModel }) {
             <Launch sx={{ fontSize: 16}} />
           </IconButton>
         </Link>
-        <HelpOutline />
+        <HelpOutline color="disabled" />
         <Avatar
           sx={{ bgcolor: "#d2691e", width: 32, height: 32, fontSize: "1rem" }}
         >
