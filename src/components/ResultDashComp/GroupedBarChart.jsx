@@ -21,21 +21,21 @@ const GroupedBarChart = ({ ruleOutput }) => {
     {
       category: "Approve",
       ...ruleOutput.summary.reduce((acc, item) => {
-        acc[item.ruleName] = item.approvePct;
+        acc[item.ruleName] = item.approvePercent;
         return acc;
       }, {})
     },
     {
       category: "Review",
       ...ruleOutput.summary.reduce((acc, item) => {
-        acc[item.ruleName] = item.reviewPct;
+        acc[item.ruleName] = item.reviewPercent;
         return acc;
       }, {})
     },
     {
       category: "Decline",
       ...ruleOutput.summary.reduce((acc, item) => {
-        acc[item.ruleName] = item.declinePct;
+        acc[item.ruleName] = item.declinePercent;
         return acc;
       }, {})
     }

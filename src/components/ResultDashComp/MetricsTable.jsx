@@ -13,67 +13,10 @@ import { use, useEffect, useState } from "react";
 
 const MetricsTable = ({ruleOutput}) => {
   const theme = useTheme();
-
-  const transformRuleOutputToRows = (ruleOutput) => {
-  if (!ruleOutput || !ruleOutput.summary) return [];
-
-  const { summary } = ruleOutput;
-
-  // Simulate revenueLoan since it's not provided in API
-  const mockRevenue = {
-    CreditPolicy: 680,
-    CreditPolicy_Challenger1: 630,
-    CreditPolicy_Challenger2: 670,
-  };
-
-  // Create base rows
-  const baseRows = summary.map((item) => {
-    const ruleDisplayName = item.ruleName;
-    const approvalRate = `${item.approvePct}%`;
-    const revenueLoan = `$${mockRevenue[item.ruleName]}`;
-    const decisionLatency = `${(item.avgTimeMs / 1000).toFixed(1)}s`;
-
-    return {
-      rule: ruleDisplayName,
-      approvalRate,
-      revenueLoan,
-      decisionLatency,
-      raw: {
-        approvePct: item.approvePct,
-        avgTime: item.avgTimeMs,
-        revenue: mockRevenue[item.ruleName],
-      },
-    };
-  });
-
-  // Calculate deltas based on Champion
-  const champion = baseRows[0];
-  return baseRows.map((row, idx) => {
-    if (idx === 0) {
-      return { ...row, deltaAR: "", deltaRL: "", deltaDL: "", color: "success.main" };
-    }
-
-    const deltaAR = row.raw.approvePct - champion.raw.approvePct;
-    const deltaRL = row.raw.revenue - champion.raw.revenue;
-    const deltaDL = (row.raw.avgTime - champion.raw.avgTime) / 1000;
-
-    // Determine color based on value
-    const color = (value) => (value >= 0 ? "success.main" : "error.main");
-
-    return {
-      ...row,
-      deltaAR: `${deltaAR >= 0 ? "+" : ""}${deltaAR.toFixed(0)}%`,
-      deltaRL: `${deltaRL >= 0 ? "+" : ""}${deltaRL}$`,
-      deltaDL: `${deltaDL >= 0 ? "+" : ""}${deltaDL.toFixed(1)}s`,
-      color: color(deltaAR), // or choose which delta to reflect the color
-    };
-  });
-};
-
   const [rows, setRows] = useState([]);
   useEffect(() => {
     // Usage
-    const rows = transformRuleOutputToRows(ruleOutput);
+    const rows = ruleOutput?.summary || [];
     console.log(rows);
     setRows(rows);
   }, [ruleOutput]);
@@ -96,37 +39,22 @@ const MetricsTable = ({ruleOutput}) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((r) => (
+          {rows.map((r,index) => (
             <TableRow key={r.rule} hover>
               <TableCell>
-                <Typography fontWeight={600}>{r.rule}</Typography>
+                <Typography fontWeight={600}>{r.ruleName}</Typography>
               </TableCell>
-              <TableCell>{r.approvalRate}</TableCell>
-              <TableCell>{r.revenueLoan}</TableCell>
-              <TableCell>{r.decisionLatency}</TableCell>
-              <TableCell
-                sx={{
-                  color:
-                    theme.palette[r.color.split(".")[0]][r.color.split(".")[1]],
-                }}
-              >
-                {r.deltaAR}
+              <TableCell>{r.approvePercent.toFixed(2)}</TableCell>
+              <TableCell>{r.approvedLoanAmount.toFixed(2)}</TableCell>
+              <TableCell>{((r.avgTime)/1000).toFixed(2)}</TableCell>
+              <TableCell sx={{ color:r.approveDifference>=0?theme.palette.success.main:theme.palette.error.main}}>
+                {index==0?"":`${r.approveDifference>=0?"+":""}${r.approveDifference.toFixed(2)}`}
               </TableCell>
-              <TableCell
-                sx={{
-                  color:
-                    theme.palette[r.color.split(".")[0]][r.color.split(".")[1]],
-                }}
-              >
-                {r.deltaRL}
+              <TableCell sx={{ color:r.loanAmountDifference>=0?theme.palette.success.main:theme.palette.error.main}}>
+                {index==0?"":`${r.loanAmountDifference>=0?"+":""}${r.loanAmountDifference.toFixed(2)}`}
               </TableCell>
-              <TableCell
-                sx={{
-                  color:
-                    theme.palette[r.color.split(".")[0]][r.color.split(".")[1]],
-                }}
-              >
-                {r.deltaDL}
+              <TableCell sx={{ color:r.avgTimeDifference<0?theme.palette.success.main:theme.palette.error.main}}>
+                {index==0?"":`${r.avgTimeDifference>=0?"+":""}${((r.avgTimeDifference)/1000).toFixed(2)}`}
               </TableCell>
             </TableRow>
           ))}

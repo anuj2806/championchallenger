@@ -1,4 +1,4 @@
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
@@ -15,12 +15,7 @@ import {
   LineChart,
   Line,
 } from "recharts";
-import {
-  Box,
-  Button,
-  Grid,
-  
-} from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import SectionCard from "../components/SectionCard";
 import StatCard from "../components/ResultDashComp/StatCard";
@@ -28,6 +23,7 @@ import DrilldownList from "../components/ResultDashComp/DrilldownList";
 import MetricsTable from "../components/ResultDashComp/MetricsTable";
 import GroupedBarChart from "../components/ResultDashComp/GroupedBarChart";
 import TATBarChart from "../components/ResultDashComp/TATBarChart";
+import MetricsDashboard from "../components/ResultDashComp/MatricsDashboard";
 
 const METRICS = {
   approvalChampion: 62,
@@ -41,20 +37,29 @@ const METRICS = {
 };
 
 const tatData = [
-  { version: "v1.0", Champion: METRICS.tatChampion, Challenger: METRICS.tatChallenger },
-  { version: "v1.1", Champion: METRICS.tatChampion, Challenger: METRICS.tatChallenger },
+  {
+    version: "v1.0",
+    Champion: METRICS.tatChampion,
+    Challenger: METRICS.tatChallenger,
+  },
+  {
+    version: "v1.1",
+    Champion: METRICS.tatChampion,
+    Challenger: METRICS.tatChallenger,
+  },
 ];
 
-const ResultDashboard = ({handlePromote,handleReject,ruleOutput}) => {
+const ResultDashboard = ({ handlePromote, handleReject, ruleOutput }) => {
+  const [rows, setRows] = useState([]);
   useEffect(() => {
-    // Handle side effects here
-
-
-  }, [ ruleOutput]);
+    const rows = ruleOutput?.summary || [];
+    console.log(rows);
+    setRows(rows);
+  }, [ruleOutput]);
 
   return (
     <Grid
-     size={{ xs: 12}}
+      size={{ xs: 12 }}
       component={motion.div}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -83,43 +88,7 @@ const ResultDashboard = ({handlePromote,handleReject,ruleOutput}) => {
         }
       >
         <Grid container spacing={2}>
-          <Grid size={{ xs: 6, md:3 }}>  
-            <StatCard
-              title="Approval Rate"
-              left={METRICS.approvalChampion}
-              right={METRICS.approvalChallenger}
-              delta={METRICS.approvalChallenger - METRICS.approvalChampion}
-            />
-          </Grid>
-          <Grid size={{ xs: 6, md:3 }}>
-            <StatCard
-              title="Default Rate"
-              left={METRICS.defaultChampion}
-              right={METRICS.defaultChallenger}
-              delta={Number(
-                (METRICS.defaultChallenger - METRICS.defaultChampion).toFixed(1)
-              )}
-              goodIsUp={false}
-            />
-          </Grid>
-          <Grid size={{ xs: 6, md:3 }}>
-            <StatCard
-              title="Revenue / Loan ($)"
-              left={METRICS.revenueChampion}
-              right={METRICS.revenueChallenger}
-              delta={METRICS.revenueChallenger - METRICS.revenueChampion}
-            />
-          </Grid>
-          <Grid size={{ xs: 6, md:3 }}> 
-            <StatCard
-              title="TAT (latency)"
-              left={METRICS.tatChampion}
-              right={METRICS.tatChallenger}
-              delta={METRICS.tatChallenger - METRICS.tatChampion}
-              goodIsUp={false}
-            />
-          </Grid>
-
+          <MetricsDashboard summary={rows} />
           <Grid size={{ xs: 12, md: 6}}>  
             <SectionCard title="Category-Wise Rule Performance Chart">
               <Box sx={{ height: 280 }}>
@@ -135,21 +104,20 @@ const ResultDashboard = ({handlePromote,handleReject,ruleOutput}) => {
               </Box>
             </SectionCard>
           </Grid>
-
-          <Grid size={{ xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <SectionCard
-            //   title="Risk Grade Migration (Champion → Challenger)"
+              //   title="Risk Grade Migration (Champion → Challenger)"
               title="Side by Side Metrics"
               sx={{ overflowX: "auto" }}
             >
               {/* <RiskHeatmap buckets={RISK_BUCKETS} matrix={riskMigration} /> */}
-              <MetricsTable ruleOutput={ruleOutput}/> 
+              <MetricsTable ruleOutput={ruleOutput} />
             </SectionCard>
           </Grid>
 
-          <Grid size={{ xs: 12}}> 
-            <SectionCard title="Application Drill-down (sample)">
-              <DrilldownList ruleOutput={ruleOutput}/>
+          <Grid size={{ xs: 12 }}>
+            <SectionCard title="Application Drill-down">
+              <DrilldownList ruleOutput={ruleOutput} />
             </SectionCard>
           </Grid>
         </Grid>

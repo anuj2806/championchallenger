@@ -1,6 +1,4 @@
-
 import React, { useState } from "react";
-
 import { useThemeContext } from "../Theme/ThemeContext.jsx";
 import {
   AppBar,
@@ -10,16 +8,24 @@ import {
   Switch,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import PreLandingDashboard from "./PreLandingDashboard.jsx";
 import BreChampionChallengerUI from "./BreChampionChallengerUI.jsx";
 import SearchIcon from "@mui/icons-material/Search";
+import NewgenHeaderComponent from "../components/NewgenHeaderComponent.jsx";
+import ColumnMapping from "../components/ColumnMapping.jsx";
 
 const Main = () => {
-      const { darkMode, toggleDarkMode } = useThemeContext();
-      const [simulationPage, setSimulationPage] = useState(false);
+  const { darkMode, toggleDarkMode } = useThemeContext();
+  const [simulationPage, setSimulationPage] = useState(false);
+   const theme = useTheme();
+  const openChallengerModel = ()=>{
+    window.open('https://consumerlosus.newgensoftware.net/automationstudio/','_blank'); 
+  }
   return (
-    <Box
+    <>
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -27,13 +33,14 @@ const Main = () => {
           bgcolor: "background.default",
         }}
       >
-        <AppBar position="sticky" color="primary" elevation={1}>
-          <Toolbar>
+        <AppBar position="sticky" color="primary" elevation={1} > 
+          <NewgenHeaderComponent openChallengerModel={openChallengerModel}/>
+          <Toolbar sx={{background:theme.palette.header.main}}> 
             <Typography
               variant="h6"
               sx={{ flexGrow: 1, fontWeight: 700, color: "white" }}
             >
-              BRE Rule Versions
+              Newgen's Credit Decisioning Engine
             </Typography>
             {/* <TextField
             size="small"
@@ -49,13 +56,27 @@ const Main = () => {
               ),
             }}
           /> */}
-         
-          <Button variant="contained" sx={{mr:4}} onClick={() => setSimulationPage(!simulationPage)}>{simulationPage?"Back to Dashboard":"Initiate Champion/Challenger Analysis"}</Button>
-           <FormControlLabel
-            control={<Switch checked={darkMode} onChange={toggleDarkMode} />}
-            label={darkMode ? "Dark" : "Light"}
-          />
-          {/* <IconButton
+            <Button
+              variant="contained"
+              sx={{ mr: 2 }}
+              onClick={openChallengerModel}
+            >
+              Create a Challenger model
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ mr: 2 }}
+              onClick={() => setSimulationPage(!simulationPage)}
+            >
+              {simulationPage
+                ? "Back to Dashboard"
+                : "Initiate Champion/Challenger Analysis"}
+            </Button>
+            <FormControlLabel
+              control={<Switch checked={darkMode} onChange={toggleDarkMode} />}
+              label={darkMode ? "Dark" : "Light"}
+            />
+            {/* <IconButton
             color="inherit"
             onClick={(e) => setAnchorEl(e.currentTarget)}
           >
@@ -74,9 +95,10 @@ const Main = () => {
           </Menu> */}
           </Toolbar>
         </AppBar>
-        {simulationPage?<BreChampionChallengerUI />:<PreLandingDashboard />}
+        {simulationPage ? <BreChampionChallengerUI /> : <PreLandingDashboard />}
       </Box>
-  )
-}
+    </>
+  );
+};
 
-export default Main
+export default Main;

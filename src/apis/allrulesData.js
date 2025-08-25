@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getAllRules = async () => {
   try {
-    const response = await axios.get("https://tytlmsdemo.newgensoftware.net:8443/ChampionChallenger/ruleData");
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/ruleData`);
     return response.data;
   } catch (error) {
     console.error("Error fetching all rules:", error);

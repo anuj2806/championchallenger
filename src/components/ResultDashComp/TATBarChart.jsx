@@ -16,7 +16,7 @@ const TATBarChart = ({ apiOutput }) => {
   // Transform API data for Recharts
   const chartData = apiOutput.summary.map((item) => ({
     rule: item.ruleName,
-    latency: item.avgTimeMs
+    latency: item.avgTime/1000
   }));
 
   return (
@@ -27,7 +27,7 @@ const TATBarChart = ({ apiOutput }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="rule" />
         <YAxis />
-        <Tooltip formatter={(value) => `${value.toFixed(2)} ms`} />
+        <Tooltip formatter={(value) => `${value.toFixed(2)} s`} />
         <Legend />
         <Bar dataKey="latency" fill="#e67496ff" radius={[4, 4, 0, 0]} />
       </BarChart>
